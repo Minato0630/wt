@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uppercase Checking</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6f2ff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            width: 350px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Uppercase Checking</h2>
+
+<input type="text" id="str" placeholder="Enter a string">
+
+<br>
+
+<button onclick="check()">Check</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+function check() {
+    let s = document.getElementById("str").value;
+
+    if (s.charAt(0) >= 'A' && s.charAt(0) <= 'Z') {
+        document.getElementById("result").innerHTML =
+        "First character is uppercase";
+    }
+    else {
+        document.getElementById("result").innerHTML =
+        "First character is not uppercase";
+    }
+}
+</script>
+
+</body>
+</html>

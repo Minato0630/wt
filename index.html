@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.html</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* ===== TAB BAR (top row with file tabs) ===== */
+        .tab-bar {
+            display: flex;
+            align-items: flex-end;
+            background: #252525;
+            height: 36px;
+            padding-left: 4px;
+            gap: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex-shrink: 0;
+        }
+        .tab-bar::-webkit-scrollbar { display: none; }
+
+        .np-icon {
+            width: 16px;
+            height: 16px;
+            margin: 0 6px 0 8px;
+            align-self: center;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            height: 30px;
+            padding: 0 14px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: #999999;
+            background: #252525;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            border-radius: 6px 6px 0 0;
+            transition: background 0.1s, color 0.1s;
+            position: relative;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .tab:hover {
+            background: #2a2a2a;
+            color: #cccccc;
+        }
+        .tab.active {
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+        .tab .tab-close {
+            font-size: 14px;
+            color: #666;
+            margin-left: 8px;
+            display: none;
+        }
+        .tab.active .tab-close,
+        .tab:hover .tab-close {
+            display: inline;
+        }
+        .tab-close:hover {
+            color: #fff;
+        }
+
+        .tab-bar-spacer {
+            flex: 1;
+            min-width: 20px;
+        }
+
+        .tab-add {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            margin-top: 6px;
+            color: #888;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .tab-add:hover { background: #333; color: #fff; }
+
+        /* Window controls */
+        .win-controls {
+            display: flex;
+            align-items: stretch;
+            height: 36px;
+            flex-shrink: 0;
+        }
+        .win-btn {
+            width: 46px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: #999;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .win-btn:hover { background: #333; color: #fff; }
+        .win-btn.close-btn:hover { background: #e81123; color: #fff; }
+        .win-btn svg { width: 10px; height: 10px; fill: currentColor; stroke: currentColor; stroke-width: 0.5px; }
+
+        /* ===== MENU BAR ===== */
+        .menu-bar {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            background: #2d2d2d;
+            padding: 0 8px;
+            gap: 0;
+            flex-shrink: 0;
+        }
+        .menu-item {
+            padding: 4px 10px;
+            font-size: 13px;
+            color: #cccccc;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            background: transparent;
+        }
+        .menu-item:hover { background: #3d3d3d; }
+
+        /* ===== FORMATTING TOOLBAR ===== */
+        .format-bar {
+            display: flex;
+            align-items: center;
+            height: 34px;
+            background: #2d2d2d;
+            border-bottom: 1px solid #3a3a3a;
+            padding: 0 12px;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+        .fmt-btn {
+            width: 30px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: #bbbbbb;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .fmt-btn:hover { background: #3d3d3d; color: #fff; }
+        .fmt-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        .fmt-sep {
+            width: 1px;
+            height: 18px;
+            background: #444;
+            margin: 0 6px;
+        }
+        .fmt-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 3px 8px;
+            font-size: 13px;
+            color: #bbbbbb;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            background: transparent;
+        }
+        .fmt-dropdown:hover { background: #3d3d3d; }
+        .fmt-dropdown .caret {
+            font-size: 8px;
+            margin-left: 2px;
+        }
+
+        .format-bar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        /* ===== MAIN TEXT AREA ===== */
+        .text-area {
+            flex: 1;
+            display: flex;
+            background: #1e1e1e;
+            overflow: hidden;
+        }
+        .text-area textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            outline: none;
+            resize: none;
+            padding: 12px 18px;
+            font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.45;
+            tab-size: 4;
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow: auto;
+            caret-color: #d4d4d4;
+        }
+        .text-area textarea::selection {
+            background: #264f78;
+            color: #ffffff;
+        }
+
+        /* ===== STATUS BAR ===== */
+        .status-bar {
+            height: 24px;
+            background: #252525;
+            border-top: 1px solid #333;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            font-size: 12px;
+            color: #888888;
+            gap: 0;
+            flex-shrink: 0;
+        }
+        .status-item {
+            padding: 0 12px;
+        }
+        .status-spacer {
+            flex: 1;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            background: #323232;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== MOBILE BOTTOM BAR ===== */
+        .mobile-bar {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            left: 0; right: 0;
+            height: 48px;
+            background: #252525;
+            border-top: 1px solid #3a3a3a;
+            padding: 4px 8px;
+            gap: 6px;
+            align-items: center;
+            z-index: 500;
+        }
+        .mob-btn {
+            flex: 1;
+            height: 38px;
+            border-radius: 4px;
+            border: 1px solid #3a3a3a;
+            background: #2d2d2d;
+            color: #ccc;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mob-btn:active { background: #444; }
+        .mob-btn-copy { background: #0f6b2f; border-color: #1a9c49; color: #fff; }
+        .mob-btn-copy:active { background: #0a5a26; }
+
+        @media (max-width: 768px) {
+            .mobile-bar { display: flex; }
+            .format-bar { display: none; }
+            .win-controls { display: none; }
+            body { padding-bottom: 72px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+        <!-- Notepad icon -->
+        <svg class="np-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="1" width="12" height="14" rx="1.5" fill="#4a86c8" stroke="#5a96d8" stroke-width="0.5"/>
+            <rect x="4" y="4" width="8" height="1" rx="0.3" fill="#ffffff" opacity="0.7"/>
+            <rect x="4" y="6.5" width="8" height="1" rx="0.3" fill="#ffffff" opacity="0.5"/>
+            <rect x="4" y="9" width="5" height="1" rx="0.3" fill="#ffffff" opacity="0.5"/>
+        </svg>
+        <div id="tabsList"></div>
+        <div class="tab-bar-spacer"></div>
+        <button class="tab-add" title="New tab">+</button>
+        <div class="win-controls">
+            <button class="win-btn" title="Minimize">
+                <svg viewBox="0 0 10 10"><line x1="0" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+            <button class="win-btn" title="Maximize">
+                <svg viewBox="0 0 10 10"><rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+            <button class="win-btn close-btn" title="Close">
+                <svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="0" x2="0" y2="10" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- MENU BAR -->
+    <div class="menu-bar">
+        <button class="menu-item">File</button>
+        <button class="menu-item">Edit</button>
+        <button class="menu-item">View</button>
+    </div>
+
+    <!-- FORMATTING TOOLBAR -->
+    <div class="format-bar">
+        <button class="fmt-dropdown">H1 <span class="caret">▾</span></button>
+        <div class="fmt-sep"></div>
+        <button class="fmt-dropdown">☰ <span class="caret">▾</span></button>
+        <div class="fmt-sep"></div>
+        <button class="fmt-btn" title="Bold"><b>B</b></button>
+        <button class="fmt-btn" title="Italic"><i>I</i></button>
+        <button class="fmt-btn" title="Strikethrough"><s>S</s></button>
+        <button class="fmt-btn" title="Link">🔗</button>
+        <button class="fmt-btn" title="Table">☷</button>
+        <div class="fmt-sep"></div>
+        <button class="fmt-btn" title="Clear formatting" style="font-size:13px;">A̶</button>
+        <div class="format-bar-right">
+            <button class="fmt-btn" title="Settings" style="font-size:15px;">⚙</button>
+        </div>
+    </div>
+
+    <!-- MAIN TEXT AREA -->
+    <div class="text-area">
+        <textarea id="codeDisplay" spellcheck="false"></textarea>
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <span class="status-item" id="statusLn">Ln 1, Col 1</span>
+        <span class="status-item" id="statusChars">0 characters</span>
+        <span class="status-spacer"></span>
+        <span class="status-item">Plain text</span>
+        <span class="status-item">100%</span>
+        <span class="status-item">Windows (CRLF)</span>
+        <span class="status-item">UTF-8</span>
+    </div>
+
+    <!-- MOBILE BOTTOM BAR -->
+    <div class="mobile-bar">
+        <button class="mob-btn" onclick="prevProgram()">◀ Prev (P)</button>
+        <button class="mob-btn mob-btn-copy" id="mobileCopyBtn" onclick="copyCode()">📋 Copy (C)</button>
+        <button class="mob-btn" onclick="nextProgram()">Next (N) ▶</button>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const programs = [
+            {
+                id: "1",
+                file: "1.html",
+                code: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Book Store</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f2f2f2;
+            margin: 20px;
+        }
+
+        h1 {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #222;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        h2 {
+            color: #003366;
+        }
+
+        section {
+            background-color: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        input, textarea {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #003366;
+            color: white;
+        }
+
+        footer {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>ONLINE BOOK STORE</h1>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#register">Register</a>
+    <a href="#login">Login</a>
+    <a href="#profile">Profile</a>
+    <a href="#catalog">Books</a>
+    <a href="#cart">Cart</a>
+    <a href="#payment">Payment</a>
+</nav>
+
+<section id="home">
+    <h2>Home Page</h2>
+    <p>Welcome to our Online Book Store!</p>
+    <p>Find your favourite books at affordable prices.</p>
+</section>
+
+<section id="register">
+    <h2>Registration</h2>
+    <form>
+        Name: <input type="text" required><br>
+        Email: <input type="email" required><br>
+        Password: <input type="password" required><br>
+        <input type="submit" value="Register">
+    </form>
+</section>
+
+<section id="login">
+    <h2>User Login</h2>
+    <form>
+        Email: <input type="email"><br>
+        Password: <input type="password"><br>
+        <input type="submit" value="Login">
+    </form>
+</section>
+
+<section id="profile">
+    <h2>User Profile</h2>
+    <p>Name: Gokul</p>
+    <p>Email: gokul@gmail.com</p>
+    <p>Address: Tamil Nadu, India</p>
+</section>
+
+<section id="catalog">
+    <h2>Book Catalog</h2>
+
+    <table>
+        <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Price</th>
+        </tr>
+        <tr>
+            <td>HTML and CSS</td>
+            <td>Jon Duckett</td>
+            <td>Rs. 400</td>
+        </tr>
+        <tr>
+            <td>JavaScript</td>
+            <td>David Flanagan</td>
+            <td>Rs. 500</td>
+        </tr>
+        <tr>
+            <td>PHP Programming</td>
+            <td>Rasmus Lerdorf</td>
+            <td>Rs. 350</td>
+        </tr>
+    </table>
+</section>
+
+<section id="cart">
+    <h2>Shopping Cart</h2>
+    <p>HTML and CSS - Rs. 400</p>
+    <p>JavaScript - Rs. 500</p>
+    <h3>Total: Rs. 900</h3>
+</section>
+
+<section id="payment">
+    <h2>Payment</h2>
+    <form>
+        Card Holder Name: <input type="text"><br>
+        Card Number: <input type="text" maxlength="16"><br>
+        Expiry Date: <input type="month"><br>
+        CVV: <input type="password" maxlength="3"><br>
+        <input type="submit" value="Pay Now">
+    </form>
+</section>
+
+<section>
+    <h2>Order Confirmation</h2>
+    <p>Your order has been placed successfully!</p>
+    <p>Thank you for shopping with us.</p>
+</section>
+
+<footer>
+    Online Book Store - All Rights Reserved
+</footer>
+
+</body>
+</html>`
+            },
+            {
+                id: "2",
+                file: "2.html",
+                code: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6f2ff;
+        }
+
+        .container {
+            width: 450px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h2 {
+            text-align: center;
+            color: #003366;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            background-color: #003366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            color: green;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Registration Form</h2>
+
+<form onsubmit="showMessage(event)">
+
+    Name:
+    <input type="text" required><br><br>
+
+    Password:
+    <input type="password" required><br><br>
+
+    Email:
+    <input type="email" required><br><br>
+
+    Phone Number:
+    <input type="tel" required><br><br>
+
+    Sex:
+    <input type="radio" name="sex" required> Male
+    <input type="radio" name="sex"> Female
+    <input type="radio" name="sex"> Other
+    <br><br>
+
+    Date of Birth:
+
+    <select required>
+        <option value="">Day</option>
+        <script>
+            for(let i=1; i<=31; i++)
+                document.write("<option>"+i+"</option>");
+        <\/script>
+    </select>
+
+    <select required>
+        <option value="">Month</option>
+        <script>
+            for(let i=1; i<=12; i++)
+                document.write("<option>"+i+"</option>");
+        <\/script>
+    </select>
+
+    <select required>
+        <option value="">Year</option>
+        <script>
+            for(let i=2000; i<=2026; i++)
+                document.write("<option>"+i+"</option>");
+        <\/script>
+    </select>
+
+    <br><br>
+
+    Languages Known:<br>
+
+    <input type="checkbox"> English
+    <input type="checkbox"> Telugu
+    <input type="checkbox"> Hindi
+    <input type="checkbox"> Tamil
+
+    <br><br>
+
+    Address:<br>
+    <textarea rows="4" cols="35"></textarea>
+
+    <br><br>
+
+    <input type="submit" value="Submit">
+    <input type="reset" value="Reset">
+
+</form>
+
+<h3 id="result"></h3>
+
+</div>
+
+<script>
+function showMessage(event) {
+    event.preventDefault();
+
+    document.getElementById("result").innerHTML =
+    "Your registration process is successfully completed";
+}
+<\/script>
+
+</body>
+</html>`
+            },
+            {
+                id: "3a",
+                file: "3a.html",
+                code: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Uppercase Checking</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6f2ff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            width: 350px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Uppercase Checking</h2>
+
+<input type="text" id="str" placeholder="Enter a string">
+
+<br>
+
+<button onclick="check()">Check</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+function check() {
+    let s = document.getElementById("str").value;
+
+    if (s.charAt(0) >= 'A' && s.charAt(0) <= 'Z') {
+        document.getElementById("result").innerHTML =
+        "First character is uppercase";
+    }
+    else {
+        document.getElementById("result").innerHTML =
+        "First character is not uppercase";
+    }
+}
+<\/script>
+
+</body>
+</html>`
+            },
+            {
+                id: "3b",
+                file: "3b.html",
+                code: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Validation</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6f2ff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            width: 350px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #result {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Email Validation</h2>
+
+<input type="text" id="email" placeholder="Enter email">
+
+<br>
+
+<button onclick="checkEmail()">Validate</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+function checkEmail() {
+
+    let email = document.getElementById("email").value;
+
+    let pattern =
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;
+
+    if (pattern.test(email)) {
+        document.getElementById("result").innerHTML =
+        "Valid Email Address";
+    }
+    else {
+        document.getElementById("result").innerHTML =
+        "Invalid Email Address";
+    }
+}
+<\/script>
+
+</body>
+</html>`
+            },
+            {
+                id: "3c",
+                file: "3c.html",
+                code: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Thousands Separator</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6f2ff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            width: 350px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Thousands Separator</h2>
+
+<input type="number" id="num" placeholder="Enter an integer">
+
+<br>
+
+<button onclick="showNumber()">Convert</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+function showNumber() {
+
+    let n = document.getElementById("num").value;
+
+    let result = Number(n).toLocaleString("en-US");
+
+    document.getElementById("result").innerHTML = result;
+}
+<\/script>
+
+</body>
+</html>`
+            },
+            {
+                id: "3d",
+                file: "3d.html",
+                code: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Odd or Even</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: lightblue;
+            text-align: center;
+        }
+
+        h2 {
+            color: blue;
+        }
+
+        p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Odd or Even Numbers</h2>
+
+<script>
+for (let i = 0; i <= 15; i++) {
+
+    if (i % 2 == 0) {
+        document.write(i + " is Even<br>");
+    }
+    else {
+        document.write(i + " is Odd<br>");
+    }
+
+}
+<\/script>
+
+</body>
+</html>`
+            }
+        ];
+
+        let currentIndex = 0;
+
+        function renderTabs() {
+            const container = document.getElementById("tabsList");
+            container.innerHTML = "";
+            programs.forEach((prog, idx) => {
+                const tab = document.createElement("button");
+                tab.className = `tab${idx === currentIndex ? ' active' : ''}`;
+                tab.innerHTML = `${prog.file}<span class="tab-close">×</span>`;
+                tab.onclick = () => selectProgram(idx);
+                container.appendChild(tab);
+            });
+        }
+
+        function selectProgram(idx) {
+            currentIndex = idx;
+            const prog = programs[currentIndex];
+
+            // Update title
+            document.title = prog.file;
+
+            // Update tabs
+            renderTabs();
+
+            // Update code
+            const ta = document.getElementById("codeDisplay");
+            ta.value = prog.code;
+            ta.scrollTop = 0;
+            ta.setSelectionRange(0, 0);
+
+            // Update status bar
+            updateStatus();
+        }
+
+        function nextProgram() {
+            selectProgram((currentIndex + 1) % programs.length);
+        }
+
+        function prevProgram() {
+            selectProgram((currentIndex - 1 + programs.length) % programs.length);
+        }
+
+        function copyCode() {
+            const text = programs[currentIndex].code.trim().replace(/\r?\n/g, '\r\n');
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showToast()).catch(() => fallbackCopy(text));
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.top = "-9999px";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try { document.execCommand('copy'); showToast(); }
+            catch(e) { showToast("Copy failed!"); }
+            document.body.removeChild(ta);
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const t = document.getElementById("toast");
+            t.textContent = msg || `Copied ${programs[currentIndex].file}`;
+            t.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove("show"), 1500);
+        }
+
+        // Live status bar: Ln, Col, characters
+        function updateStatus() {
+            const ta = document.getElementById("codeDisplay");
+            const text = ta.value;
+            const pos = ta.selectionStart;
+            const before = text.substring(0, pos);
+            const ln = before.split('\n').length;
+            const col = pos - before.lastIndexOf('\n');
+            document.getElementById("statusLn").textContent = `Ln ${ln}, Col ${col}`;
+            document.getElementById("statusChars").textContent = `${text.length} characters`;
+        }
+
+        // Attach live cursor/typing events
+        (function() {
+            const ta = document.getElementById("codeDisplay");
+            ta.addEventListener("input", updateStatus);
+            ta.addEventListener("click", updateStatus);
+            ta.addEventListener("keyup", updateStatus);
+            ta.addEventListener("select", updateStatus);
+
+            // Tab key inserts a real tab instead of focus-jumping
+            ta.addEventListener("keydown", function(e) {
+                if (e.key === "Tab") {
+                    e.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 1;
+                    updateStatus();
+                }
+            });
+        })();
+
+        // Keyboard shortcuts
+        window.addEventListener("keydown", (e) => {
+            const active = document.activeElement;
+            const inEditor = active && active.id === "codeDisplay";
+
+            if (e.key.toLowerCase() === "n" && !inEditor) {
+                e.preventDefault(); nextProgram();
+            } else if (e.key.toLowerCase() === "p" && !inEditor) {
+                e.preventDefault(); prevProgram();
+            } else if (e.key.toLowerCase() === "c" && !e.ctrlKey && !e.metaKey && !inEditor) {
+                e.preventDefault(); copyCode();
+            } else if (e.key === "ArrowRight" && !inEditor) {
+                e.preventDefault(); nextProgram();
+            } else if (e.key === "ArrowLeft" && !inEditor) {
+                e.preventDefault(); prevProgram();
+            }
+        });
+
+        // Init
+        renderTabs();
+        selectProgram(0);
+    </script>
+</body>
+</html>

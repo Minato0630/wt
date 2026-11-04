@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thousands Separator</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6f2ff;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background-color: white;
+            padding: 30px;
+            width: 350px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Thousands Separator</h2>
+
+<input type="number" id="num" placeholder="Enter an integer">
+
+<br>
+
+<button onclick="showNumber()">Convert</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+function showNumber() {
+
+    let n = document.getElementById("num").value;
+
+    let result = Number(n).toLocaleString("en-US");
+
+    document.getElementById("result").innerHTML = result;
+}
+</script>
+
+</body>
+</html>
