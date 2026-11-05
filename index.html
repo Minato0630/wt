@@ -36,6 +36,15 @@
         }
         .tab-bar::-webkit-scrollbar { display: none; }
 
+        #tabsList {
+            display: flex;
+            align-items: flex-end;
+            height: 100%;
+            gap: 2px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
         .np-icon {
             width: 16px;
             height: 16px;
@@ -45,7 +54,7 @@
         }
 
         .tab {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             height: 30px;
             padding: 0 14px;
@@ -1046,6 +1055,10 @@ for (let i = 0; i <= 15; i++) {
                 tab.onclick = () => selectProgram(idx);
                 container.appendChild(tab);
             });
+            const activeTab = container.children[currentIndex];
+            if (activeTab) {
+                try { activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); } catch(e){}
+            }
         }
 
         function selectProgram(idx) {
