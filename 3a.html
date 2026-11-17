@@ -1,35 +1,114 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uppercase Checking</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
         body {
-            font-family: Arial;
-            background-color: #e6f2ff;
-            text-align: center;
-            padding: 50px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .box {
-            background-color: white;
-            padding: 30px;
-            width: 350px;
-            margin: auto;
-            border-radius: 10px;
+            background-color: #ffffff;
+            padding: 35px 30px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 51, 102, 0.12);
+            border: 1px solid #e2e8f0;
+            text-align: center;
         }
 
-        input, button {
-            padding: 10px;
-            margin: 10px;
+        .icon-badge {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            background: #e0f2fe;
+            color: #0284c7;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        h2 {
+            color: #003366;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.12);
         }
 
         button {
+            width: 100%;
             background-color: #003366;
-            color: white;
+            color: #ffffff;
             border: none;
+            padding: 12px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #002244;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.25);
+        }
+
+        #result {
+            margin-top: 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success-res {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+            display: block !important;
+        }
+
+        .fail-res {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+            display: block !important;
         }
     </style>
 </head>
@@ -38,31 +117,41 @@
 
 <div class="box">
 
-<h2>Uppercase Checking</h2>
+    <div class="icon-badge">🔤</div>
+    <h2>Uppercase Checking</h2>
 
-<input type="text" id="str" placeholder="Enter a string">
+    <input type="text" id="str" placeholder="Enter a string (e.g. Hello)" autofocus>
 
-<br>
+    <button onclick="check()">Check Character</button>
 
-<button onclick="check()">Check</button>
-
-<p id="result"></p>
+    <p id="result"></p>
 
 </div>
 
 <script>
 function check() {
     let s = document.getElementById("str").value;
+    let res = document.getElementById("result");
+
+    if (!s) {
+        res.className = "fail-res";
+        res.innerHTML = "⚠️ Please enter a string!";
+        return;
+    }
 
     if (s.charAt(0) >= 'A' && s.charAt(0) <= 'Z') {
-        document.getElementById("result").innerHTML =
-        "First character is uppercase";
+        res.className = "success-res";
+        res.innerHTML = "✓ First character is uppercase ('" + s.charAt(0) + "')";
     }
     else {
-        document.getElementById("result").innerHTML =
-        "First character is not uppercase";
+        res.className = "fail-res";
+        res.innerHTML = "✗ First character is not uppercase ('" + s.charAt(0) + "')";
     }
 }
+
+document.getElementById("str").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") check();
+});
 </script>
 
 </body>

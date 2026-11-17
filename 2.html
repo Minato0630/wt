@@ -1,27 +1,55 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
         body {
-            font-family: Arial;
-            background-color: #e6f2ff;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 50%, #eff6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
         }
 
         .container {
-            width: 450px;
-            margin: 30px auto;
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px gray;
+            width: 100%;
+            max-width: 520px;
+            background-color: #ffffff;
+            padding: 35px 30px;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0, 51, 102, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
         }
 
         h2 {
             text-align: center;
             color: #003366;
+            margin-bottom: 24px;
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label.form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.9rem;
         }
 
         input[type="text"],
@@ -30,25 +58,99 @@
         input[type="tel"],
         textarea,
         select {
-            padding: 8px;
-            margin: 5px;
-            border: 1px solid gray;
-            border-radius: 5px;
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.12);
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 4px 0;
+        }
+
+        .radio-label, .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #334155;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .dob-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
         }
 
         input[type="submit"],
         input[type="reset"] {
-            background-color: #003366;
-            color: white;
-            padding: 10px 20px;
+            flex: 1;
+            padding: 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        input[type="submit"] {
+            background-color: #003366;
+            color: #ffffff;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #002244;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.25);
+        }
+
+        input[type="reset"] {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+
+        input[type="reset"]:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
         }
 
         #result {
-            color: green;
+            color: #15803d;
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            padding: 14px;
+            border-radius: 8px;
             text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: none;
         }
     </style>
 </head>
@@ -61,81 +163,96 @@
 
 <form onsubmit="showMessage(event)">
 
-    Name:
-    <input type="text" required><br><br>
+    <div class="form-group">
+        <label class="form-label">Full Name:</label>
+        <input type="text" placeholder="Enter your full name" required>
+    </div>
 
-    Password:
-    <input type="password" required><br><br>
+    <div class="form-group">
+        <label class="form-label">Password:</label>
+        <input type="password" placeholder="Create a secure password" required>
+    </div>
 
-    Email:
-    <input type="email" required><br><br>
+    <div class="form-group">
+        <label class="form-label">Email Address:</label>
+        <input type="email" placeholder="example@gmail.com" required>
+    </div>
 
-    Phone Number:
-    <input type="tel" required><br><br>
+    <div class="form-group">
+        <label class="form-label">Phone Number:</label>
+        <input type="tel" placeholder="10-digit mobile number" required>
+    </div>
 
-    Sex:
-    <input type="radio" name="sex" required> Male
-    <input type="radio" name="sex"> Female
-    <input type="radio" name="sex"> Other
-    <br><br>
+    <div class="form-group">
+        <label class="form-label">Sex:</label>
+        <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="sex" required> Male</label>
+            <label class="radio-label"><input type="radio" name="sex"> Female</label>
+            <label class="radio-label"><input type="radio" name="sex"> Other</label>
+        </div>
+    </div>
 
-    Date of Birth:
+    <div class="form-group">
+        <label class="form-label">Date of Birth:</label>
+        <div class="dob-group">
+            <select required>
+                <option value="">Day</option>
+                <script>
+                    for(let i=1; i<=31; i++)
+                        document.write("<option>"+i+"</option>");
+                </script>
+            </select>
 
-    <select required>
-        <option value="">Day</option>
-        <script>
-            for(let i=1; i<=31; i++)
-                document.write("<option>"+i+"</option>");
-        </script>
-    </select>
+            <select required>
+                <option value="">Month</option>
+                <script>
+                    for(let i=1; i<=12; i++)
+                        document.write("<option>"+i+"</option>");
+                </script>
+            </select>
 
-    <select required>
-        <option value="">Month</option>
-        <script>
-            for(let i=1; i<=12; i++)
-                document.write("<option>"+i+"</option>");
-        </script>
-    </select>
+            <select required>
+                <option value="">Year</option>
+                <script>
+                    for(let i=2000; i<=2026; i++)
+                        document.write("<option>"+i+"</option>");
+                </script>
+            </select>
+        </div>
+    </div>
 
-    <select required>
-        <option value="">Year</option>
-        <script>
-            for(let i=2000; i<=2026; i++)
-                document.write("<option>"+i+"</option>");
-        </script>
-    </select>
+    <div class="form-group">
+        <label class="form-label">Languages Known:</label>
+        <div class="checkbox-group">
+            <label class="checkbox-label"><input type="checkbox"> English</label>
+            <label class="checkbox-label"><input type="checkbox"> Telugu</label>
+            <label class="checkbox-label"><input type="checkbox"> Hindi</label>
+            <label class="checkbox-label"><input type="checkbox"> Tamil</label>
+        </div>
+    </div>
 
-    <br><br>
+    <div class="form-group">
+        <label class="form-label">Address:</label>
+        <textarea rows="3" placeholder="Enter street address, city, state"></textarea>
+    </div>
 
-    Languages Known:<br>
-
-    <input type="checkbox"> English
-    <input type="checkbox"> Telugu
-    <input type="checkbox"> Hindi
-    <input type="checkbox"> Tamil
-
-    <br><br>
-
-    Address:<br>
-    <textarea rows="4" cols="35"></textarea>
-
-    <br><br>
-
-    <input type="submit" value="Submit">
-    <input type="reset" value="Reset">
+    <div class="btn-group">
+        <input type="submit" value="Submit Form">
+        <input type="reset" value="Reset" onclick="document.getElementById('result').style.display='none'">
+    </div>
 
 </form>
 
-<h3 id="result"></h3>
+<div id="result"></div>
 
 </div>
 
 <script>
 function showMessage(event) {
     event.preventDefault();
-
-    document.getElementById("result").innerHTML =
-    "Your registration process is successfully completed";
+    const res = document.getElementById("result");
+    res.style.display = "block";
+    res.innerHTML = "✓ Your registration process is successfully completed!";
 }
 </script>
 
