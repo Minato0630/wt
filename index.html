@@ -1040,6 +1040,489 @@ for (let i = 0; i <= 15; i++) {
 
 </body>
 </html>`
+            },
+            {
+                id: "welcome",
+                file: "welcome.html",
+                code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #172554 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Decorative background light circles */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            z-index: 0;
+            filter: blur(40px);
+            animation: float 8s ease-in-out infinite alternate;
+        }
+        body::before {
+            top: 10%;
+            left: 15%;
+        }
+        body::after {
+            bottom: 10%;
+            right: 15%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(30px) scale(1.1); }
+        }
+
+        /* Card Container with Glassmorphism */
+        .card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            padding: 40px 35px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Views (Page 1 & Page 2) */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: scale(0.96);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Page 1 - Input Page Styles */
+        .icon-badge {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px auto;
+            background: linear-gradient(135deg, #2563eb, #38bdf8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1.05rem;
+            color: #0f172a;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .input-field:focus {
+            border-color: #2563eb;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1e40af, #1d4ed8);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #cbd5e1;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-color: #94a3b8;
+        }
+
+        .btn-refresh {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px dashed #bfdbfe;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-refresh:hover {
+            background: #dbeafe;
+        }
+
+        /* Page 2 - Welcome & Quotes */
+        .welcome-avatar {
+            font-size: 42px;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: wave 1.2s ease infinite;
+            transform-origin: 70% 70%;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            20%, 60% { transform: rotate(14deg); }
+            40%, 80% { transform: rotate(-14deg); }
+        }
+
+        .welcome-title {
+            font-size: 1.85rem;
+            color: #0f172a;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .welcome-name {
+            color: #2563eb;
+            background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-tagline {
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-bottom: 26px;
+        }
+
+        /* Quote Box */
+        .quote-box {
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+            border-radius: 0 14px 14px 0;
+            padding: 22px 20px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            margin-bottom: 12px;
+        }
+
+        .quote-mark {
+            font-size: 3rem;
+            line-height: 1;
+            color: #cbd5e1;
+            font-family: Georgia, serif;
+            position: absolute;
+            top: 6px;
+            left: 12px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .quote-text {
+            color: #1e293b;
+            font-size: 1.05rem;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-author {
+            color: #64748b;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-align: right;
+            display: block;
+        }
+
+        .quote-author::before {
+            content: "— ";
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- ================= PAGE 1: NAME INPUT ================= -->
+        <div class="page active" id="pageInput">
+            <div class="icon-badge">👋</div>
+            <h1>Welcome!</h1>
+            <p class="subtitle">Please enter your name to continue</p>
+
+            <form id="greetingForm" onsubmit="handleFormSubmit(event)">
+                <div class="input-group">
+                    <label for="userName">Your Full Name</label>
+                    <input 
+                        type="text" 
+                        id="userName" 
+                        class="input-field" 
+                        placeholder="e.g. Alex Johnson" 
+                        autocomplete="name" 
+                        autofocus
+                    >
+                    <div class="error-msg" id="errorMsg">⚠️ Please enter your name first!</div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <span>Continue to Welcome Page</span>
+                    <span>➜</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- ================= PAGE 2: WELCOME & QUOTES ================= -->
+        <div class="page" id="pageWelcome">
+            <div class="welcome-avatar">✨</div>
+            <h1 class="welcome-title">Welcome, <span class="welcome-name" id="displayName">Friend</span>!</h1>
+            <p class="welcome-tagline">Here is some inspiration for your day</p>
+
+            <!-- Quote Container -->
+            <div class="quote-box">
+                <span class="quote-mark">“</span>
+                <p class="quote-text" id="quoteText">The secret of getting ahead is getting started.</p>
+                <span class="quote-author" id="quoteAuthor">Mark Twain</span>
+            </div>
+
+            <!-- New Quote Generator Button -->
+            <button type="button" class="btn-refresh" onclick="displayRandomQuote()">
+                <span>🔄</span> New Quote
+            </button>
+
+            <br>
+
+            <!-- Back Button -->
+            <button type="button" class="btn-secondary" onclick="goToPage(1)">
+                <span>◀</span> Change Name
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Inspiring quotes collection
+        const quotes = [
+            {
+                text: "The secret of getting ahead is getting started.",
+                author: "Mark Twain"
+            },
+            {
+                text: "It always seems impossible until it's done.",
+                author: "Nelson Mandela"
+            },
+            {
+                text: "Believe you can and you're halfway there.",
+                author: "Theodore Roosevelt"
+            },
+            {
+                text: "Your time is limited, so don't waste it living someone else's life.",
+                author: "Steve Jobs"
+            },
+            {
+                text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+                author: "Winston Churchill"
+            },
+            {
+                text: "The only way to do great work is to love what you do.",
+                author: "Steve Jobs"
+            },
+            {
+                text: "The future belongs to those who believe in the beauty of their dreams.",
+                author: "Eleanor Roosevelt"
+            },
+            {
+                text: "Do what you can, with what you have, where you are.",
+                author: "Theodore Roosevelt"
+            }
+        ];
+
+        let currentQuoteIndex = 0;
+
+        function displayRandomQuote() {
+            // Pick a different random quote
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * quotes.length);
+            } while (randomIndex === currentQuoteIndex && quotes.length > 1);
+
+            currentQuoteIndex = randomIndex;
+            const quote = quotes[currentQuoteIndex];
+
+            const textElem = document.getElementById("quoteText");
+            const authorElem = document.getElementById("quoteAuthor");
+
+            // Smooth fade effect
+            textElem.style.opacity = 0;
+            authorElem.style.opacity = 0;
+            
+            setTimeout(() => {
+                textElem.textContent = quote.text;
+                authorElem.textContent = quote.author;
+                textElem.style.opacity = 1;
+                authorElem.style.opacity = 1;
+            }, 180);
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const input = document.getElementById("userName");
+            const error = document.getElementById("errorMsg");
+            const name = input.value.trim();
+
+            if (name === "") {
+                input.style.borderColor = "#ef4444";
+                error.style.display = "block";
+                input.focus();
+                return;
+            }
+
+            // Clear errors
+            input.style.borderColor = "#e2e8f0";
+            error.style.display = "none";
+
+            // Update welcome name & choose quote
+            document.getElementById("displayName").textContent = name;
+            displayRandomQuote();
+
+            // Transition to Welcome Page (Page 2)
+            goToPage(2);
+        }
+
+        function goToPage(pageNumber) {
+            const page1 = document.getElementById("pageInput");
+            const page2 = document.getElementById("pageWelcome");
+
+            if (pageNumber === 2) {
+                page1.classList.remove("active");
+                setTimeout(() => {
+                    page2.classList.add("active");
+                }, 150);
+            } else {
+                page2.classList.remove("active");
+                setTimeout(() => {
+                    page1.classList.add("active");
+                    const input = document.getElementById("userName");
+                    input.focus();
+                    input.select();
+                }, 150);
+            }
+        }
+    <\/script>
+</body>
+</html>
+`
             }
         ];
 
